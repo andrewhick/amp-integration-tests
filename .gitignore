@@ -130,3 +130,6 @@ dmypy.json
 
 # VS Code
 .vscode/
+
+# Axe outputs
+a11y_audit.json

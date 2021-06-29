@@ -27,7 +27,14 @@ The platform requires a login. To avoid publishing usernames and passwords on Gi
 Set up a `.zshrc` file in your home directory with the following alias
 
 ```zsh
-alias pyrun="AMP_USERNAME='email@example.com' AMP_PASSWORD='MySuperSecretPassword' python -m pytest -s tests"
+alias pyrun="AMP_USERNAME='email@example.com' AMP_PASSWORD='MySuperSecretPassword' python -m pytest -s"
 ```
 
-You can then run tests by typing `pyrun`.
+You can then run tests with:
+```python
+# Run all tests
+pyrun tests
+
+# Run specific test
+pyrun tests/test_navigation.py
+```

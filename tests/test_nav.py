@@ -1,3 +1,4 @@
+import datetime
 import os
 import random
     
@@ -47,10 +48,11 @@ def test_create_case(py):
 
     # Start creating simplified case
     py.get('.govuk-grid-row.dashboard').contains('Cases').click()
-    # Get text containing the number of active cases
+    # Get text containing the number of active cases, e.g. "372 active cases"
     cases_text = py.get('.govuk-heading-m').text()
     # Extract the number from it (this is the first item separated by a space)
     original_active_cases = int(cases_text.split(' ')[0])
+    print("Number of cases: " + str(original_active_cases))
     py.get('a[href*="/cases/create"').click()
     py.get('.govuk-heading-xl').should().contain_text('Create case')
 
@@ -62,7 +64,45 @@ def test_create_case(py):
     test_organisation = "Case " + str(random.randint(0, 999999))
     py.get('[name="organisation_name"]').type("Case " + test_organisation)
     print("Case name: " + test_organisation)
+    py.get('[value="public"]').check()
+    py.get('select[name="sector"]').select('Local Government')
+    py.get('#id_region_0').check() # Selects England
+    py.get('[value="list"').check() # Selects "Website list"
+    py.get('#id_trello_url').type('https://www.example.com/trello')
+    py.get('#id_notes').type('This case has been automatically generated while running tests on the monitoring platform')
+    py.get('[name="save_exit"]').click()
+
+    # View case
+    py.get('.govuk-heading-xl').should().contain_text('View case #')
+    # Get case number
+    case_number_text = py.get('.govuk-heading-xl').text()
+    case_number = int(case_number_text.split('#')[1]) # Gets the case number after the '#' character
+    print('Case number: ' + str(case_number))
+    py.get('.govuk-grid-column-two-thirds').should().contain_text(test_organisation)
+
+    # Check number of cases has increased by 1
+    py.get('a[href="/"]').click()
+    py.get('.govuk-grid-row.dashboard').contains('Cases').click()
+    cases_text = py.get('.govuk-heading-m').text()
+    new_active_cases = int(cases_text.split(' ')[0])
+    print("Number of cases: " + str(new_active_cases))
+    assert new_active_cases == original_active_cases + 1
+
+    # Search for case
+    py.get('#id_organisation').type(test_organisation)
+    py.get('[value="Search"]').click()
+
+    # Check that case appears in results with case number and today's date
+    py.get('.govuk-table').should().contain_text('Case #' + str(case_number))
+    py.get('.govuk-table').should().contain_text(test_organisation)
+    py.get('.govuk-table').should().contain_text(datetime.datetime.now().strftime('%d/%m/%Y'))
+    py.get('.govuk-heading-m').should().contain_text('1 cases found')
+    # Access the case
+    py.get('a[href*="/view"]').click()
+    # TODO Unlist case
+    # TODO Check that case no longer appears in results
     py.wait(use_py=True).sleep(2)
 
-# todo: add test to create case
-# check case has increased by 1 and you can search for it
+# todo: finish creating case
+# stretch goal: check error messages
+# stretch goal: add axe test

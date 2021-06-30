@@ -9,7 +9,8 @@ def test_for_accessibility(py, axe):
     py.get('[value="Submit"]').click()
 
     py.get('.govuk-grid-row.dashboard').contains('Cases').click()
-    report = axe.run(name='a11y_audit.json')
+    # Run Axe, reporting on only WCAG level A and AA issues:
+    report = axe.run(name='a11y_audit.json', options='{runOnly: ["wcag2a", "wcag2aa"]}')
     # assert len(report.violations) == 0 # fails currently
     print('### ACCESSIBILITY CHECK ###')
     print('Number of accessibility violations on Cases page: ' + str(len(report.violations)))

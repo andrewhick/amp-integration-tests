@@ -3,7 +3,7 @@ import os
 def test_navigation(py):
     print('Login details: ' + os.environ.get('AMP_USERNAME') + " " + os.environ.get('AMP_PASSWORD'))
     py.visit('https://accessibility-monitoring-platform-test.london.cloudapps.digital/')
-    py.get('.govuk-heading-l').should().contain_text('Login')
+    py.get('.govuk-heading-l').should().contain_text('Sign in')
     # Invalid password
     py.get('[name="username"]').type(os.environ.get('AMP_USERNAME'))
     py.get('[name="password"]').type('cheese')
@@ -23,7 +23,7 @@ def test_navigation(py):
     py.go('back')
     # Go to websites page from link in page body
     py.get('.govuk-grid-row.dashboard').contains('Websites').click()
-    py.get('.govuk-heading-xl').should().contain_text('Query Domain Register')
+    py.get('.govuk-heading-xl').should().contain_text('Query domain register')
     py.get('#id_service').should().be_visible()
     py.go('back')
     # Go to account details from header link
@@ -33,4 +33,4 @@ def test_navigation(py):
     py.go('back')
     # Sign out
     py.get('a[href*="/accounts/logout/"').click()
-    py.get('.govuk-heading-l').should().contain_text('Login')
+    py.get('.govuk-heading-l').should().contain_text('Sign in')

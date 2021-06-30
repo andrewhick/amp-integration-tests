@@ -29,7 +29,7 @@ def test_create_case(py):
     test_organisation = "Organisation " + str(random.randint(0, 999999))
     py.get('[name="organisation_name"]').type(test_organisation)
     print("Case name: " + test_organisation)
-    py.get('[value="public"]').check()
+    py.get('[value="public"]').should().be_checked()
     py.get('select[name="sector"]').select('Local Government')
     py.get('#id_region_0').check() # Selects England
     py.get('[value="list"').check() # Selects "Website list"

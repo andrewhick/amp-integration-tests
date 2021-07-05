@@ -1,7 +1,7 @@
 import os
     
 def test_navigation(py):
-    print('Login details: ' + os.environ.get('AMP_USERNAME') + " " + os.environ.get('AMP_PASSWORD'))
+    # Navigates through each main page on the platform
     py.visit('https://accessibility-monitoring-platform-test.london.cloudapps.digital/')
     py.get('.govuk-heading-l').should().contain_text('Sign in')
     # Invalid password
